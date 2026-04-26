@@ -266,7 +266,8 @@ export const useStore = create<StoreState>((set) => ({
     if (state.supabase) {
       void state.supabase
         .from('subscriptions')
-        .insert({ subscriber_org_id: state.activeUserId, target_org_id: targetId });
+        .insert({ subscriber_org_id: state.activeUserId, target_org_id: targetId })
+        .then();
     }
 
     return {
@@ -280,7 +281,8 @@ export const useStore = create<StoreState>((set) => ({
         .from('subscriptions')
         .delete()
         .eq('subscriber_org_id', state.activeUserId)
-        .eq('target_org_id', targetId);
+        .eq('target_org_id', targetId)
+        .then();
     }
 
     return {
@@ -454,7 +456,7 @@ export const useStore = create<StoreState>((set) => ({
       result = { ok: true, message: 'Order successfully fulfilled and stock transferred.' };
 
       if (state.supabase && !order.id.startsWith('ord_')) {
-        void state.supabase.rpc('fulfill_order', { order_id: order.id });
+        void state.supabase.rpc('fulfill_order', { order_id: order.id }).then();
       }
       
       return {
@@ -499,7 +501,7 @@ export const useStore = create<StoreState>((set) => ({
         void state.supabase.rpc('increase_my_stock', {
           item_id: itemId,
           quantity,
-        });
+        }).then();
       }
       
       return {
@@ -512,7 +514,7 @@ export const useStore = create<StoreState>((set) => ({
     });
   },
 
-  addPosTransaction: (itemId, quantity) => {
+    addPosTransaction: (itemId, quantity) => {
     set((state) => {
       const myInventory = state.inventoryByOwner[state.activeUserId];
       const item = myInventory.find(i => i.id === itemId);
@@ -603,13 +605,13 @@ export const useStore = create<StoreState>((set) => ({
           item_id: itemId,
           quantity,
           total: newTransaction.total,
-        });
+        }).then();
 
         void state.supabase
           .from('inventory')
           .update({ current_stock: updatedItem.currentStock })
           .eq('org_id', state.activeUserId)
-          .eq('item_id', itemId);
+          .eq('item_id', itemId).then();
       }
       
       return {
@@ -634,7 +636,7 @@ export const useStore = create<StoreState>((set) => ({
         .from('alert_recipients')
         .update({ read: true })
         .eq('alert_id', id)
-        .eq('org_id', state.activeUserId);
+        .eq('org_id', state.activeUserId).then();
     }
   },
 }));

@@ -1,47 +1,80 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Brutalist Signal Palette */
+  --color-primary:    #E8E4DD;   /* Paper */
+  --color-accent:     #E63B2E;   /* Signal Red */
+  --color-background: #F5F3EE;   /* Off-white */
+  --color-dark:       #111111;   /* Black */
+
+  /* Old Dashboard Palette */
   --color-beige: #F4F1EB;
   --color-signal-red: #E63946;
-  --color-dark: #151515;
   --color-green: #10B981;
-  
-  --font-sans: var(--font-inter-tight);
-  --font-mono: var(--font-jetbrains-mono);
+
+  /* Typography */
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-drama:   "DM Serif Display", serif;
+  --font-data:    "Space Mono", monospace;
+  --font-sans:    "Space Grotesk", sans-serif;
+  --font-mono:    "Space Mono", monospace;
 }
 
 @layer base {
   body {
-    background-color: var(--color-beige);
+    background-color: var(--color-background);
     color: var(--color-dark);
   }
-  
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    letter-spacing: -0.05em;
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
   }
 }
 
 @layer utilities {
+  .glass-panel {
+    background: rgba(245, 243, 238, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .text-drama {
+    font-family: var(--font-drama);
+    font-style: italic;
+  }
+  .font-data {
+    font-family: var(--font-data);
+  }
+  /* Noise texture overlay */
+  .noise-overlay::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  /* Old Dashboard Utilities */
   .card-soft {
     @apply bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/5 transition-all;
   }
   
   .card-dark {
-    @apply bg-[#151515] text-white rounded-[2rem] p-6 shadow-xl transition-all;
+    @apply bg-[#111111] text-[var(--color-primary)] rounded-[2rem] p-6 shadow-xl transition-all;
   }
   
   .btn-pill {
-    @apply bg-signal-red text-white rounded-full font-sans font-bold py-2 px-6 transition-all hover:opacity-90 active:scale-95;
+    @apply bg-[var(--color-accent)] text-[var(--color-primary)] rounded-full font-sans font-bold py-2 px-6 transition-all hover:opacity-90 active:scale-95;
   }
   
   .btn-dark {
-    @apply bg-[#151515] text-white rounded-full font-sans font-bold py-2 px-6 transition-all hover:bg-black active:scale-95;
+    @apply bg-[#111111] text-[var(--color-primary)] rounded-full font-sans font-bold py-2 px-6 transition-all hover:bg-black active:scale-95;
   }
   
   .input-soft {
-    @apply bg-white border border-black/10 rounded-2xl px-4 py-3 font-sans outline-none focus:ring-2 focus:ring-signal-red/20 focus:border-signal-red transition-all;
+    @apply bg-white border border-black/10 rounded-2xl px-4 py-3 font-sans outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all;
   }
   
   .badge-soft {

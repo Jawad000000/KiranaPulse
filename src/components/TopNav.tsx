@@ -56,16 +56,6 @@ export default function TopNav() {
       {/* Right - Actions */}
       <div className="flex items-center gap-3">
         
-        {/* Role Switcher */}
-        <select 
-          value={userRole} 
-          onChange={(e) => setUserRole(e.target.value as UserRole)}
-          className="bg-white border border-black/5 rounded-full px-4 py-2 text-sm font-sans font-bold text-gray-700 outline-none focus:ring-2 focus:ring-green-500/20"
-        >
-          <option value="Retailer">Retailer</option>
-          <option value="Distributor">Distributor</option>
-          <option value="Manufacturer">Manufacturer</option>
-        </select>
 
         <Link 
           href="/alerts" 

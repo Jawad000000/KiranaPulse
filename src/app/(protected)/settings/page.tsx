@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/store/useStore';
 import { createClient } from '@/lib/supabase/client';
@@ -8,7 +9,15 @@ export default function SettingsPage() {
   const supabase = createClient();
   const { userRole, activeUserId, partners } = useStore();
   const activePartner = partners.find(partner => partner.id === activeUserId);
-  const emailRole = userRole.toLowerCase();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user?.email) {
+        setUserEmail(data.user.email);
+      }
+    });
+  }, [supabase]);
 
   return (
     <div className="flex flex-col gap-8 h-full">
@@ -23,7 +32,7 @@ export default function SettingsPage() {
           
           <div className="font-sans">
             <div className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Operator ID</div>
-            <div className="font-medium text-lg text-dark">{emailRole}@kiranapulse.local</div>
+            <div className="font-medium text-lg text-dark">{userEmail || 'Loading...'}</div>
           </div>
           
           <div className="font-sans">

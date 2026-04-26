@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
-import { Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, DM_Serif_Display, Space_Mono } from 'next/font/google';
 import "./globals.css";
 
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
-  subsets: ["latin"],
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  display: 'swap',
 });
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
+const dmSerifDisplay = DM_Serif_Display({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-drama',
+  display: 'swap',
+});
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-data',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -25,9 +34,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${interTight.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${dmSerifDisplay.variable} ${spaceMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-mono bg-beige text-dark">{children}</body>
+      <body className="noise-overlay min-h-full flex flex-col font-mono text-[var(--color-dark)] bg-[var(--color-background)]">
+        {children}
+      </body>
     </html>
   );
 }
