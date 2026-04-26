@@ -18,12 +18,12 @@ export default function ContactPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold uppercase tracking-widest mb-6">The Architect</h2>
+            <h2 className="text-xl md:text-2xl font-bold uppercase tracking-widest mb-6">Contact Me</h2>
             <p className="text-[var(--color-primary)]/80 text-lg leading-relaxed mb-8">
-              KiranaPulse was engineered and designed by <strong className="text-[var(--color-accent)]">Mohd Jawwad</strong>. It is a proprietary system built to model the synchronization of localized supply chains.
+              For any inquiries about the platform, deployment, or potential collaborations, please feel free to reach out.
             </p>
             <p className="text-[var(--color-primary)]/60 text-sm">
-              For inquiries regarding deployment, architecture, or platform ownership, establish contact via the secure channels provided.
+              You can contact me directly via my email address or check out my GitHub profile below.
             </p>
           </div>
 
