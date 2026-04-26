@@ -34,6 +34,7 @@ export default function Footer() {
             <Link href="#features" className="text-[var(--color-primary)]/60 hover:text-[var(--color-primary)] transition-colors">Features</Link>
             <Link href="#philosophy" className="text-[var(--color-primary)]/60 hover:text-[var(--color-primary)] transition-colors">Philosophy</Link>
             <Link href="#protocol" className="text-[var(--color-primary)]/60 hover:text-[var(--color-primary)] transition-colors">Protocol</Link>
+            <Link href="/contact" className="text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors font-bold tracking-widest uppercase text-xs">Contact The Architect</Link>
           </div>
           
           <div className="flex flex-col gap-4">
