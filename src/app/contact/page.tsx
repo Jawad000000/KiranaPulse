@@ -20,30 +20,33 @@ export default function ContactPage() {
           <div>
             <h2 className="text-xl md:text-2xl font-bold uppercase tracking-widest mb-6">Contact Me</h2>
             <p className="text-[var(--color-primary)]/80 text-lg leading-relaxed mb-8">
-              For any inquiries about the platform, deployment, or potential collaborations, please feel free to reach out.
+              For any inquiries about the platform, deployment. Please feel free to reach out.
+            </p>
+            <p className="text-[var(--color-primary)]/80 text-sm mb-4">
+              You can contact me directly via my email address.
             </p>
             <p className="text-[var(--color-primary)]/60 text-sm">
-              You can contact me directly via my email address or check out my GitHub profile below.
+              You can also check out the official GitHub repository of this project below.
             </p>
           </div>
 
           <div className="flex flex-col gap-6">
-            <a
-              href="https://github.com/Jawad000000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group border border-[var(--color-primary)]/20 hover:border-[var(--color-accent)] bg-[var(--color-primary)]/5 p-8 flex flex-col transition-colors"
-            >
-              <span className="text-xs uppercase tracking-widest text-[var(--color-primary)]/50 mb-2">Repository Profile</span>
-              <span className="font-heading font-bold text-2xl group-hover:text-[var(--color-accent)] transition-colors">GitHub / Jawad000000</span>
-            </a>
-
             <a
               href="mailto:mohdjawwad73@gmail.com"
               className="group border border-[var(--color-primary)]/20 hover:border-[var(--color-accent)] bg-[var(--color-primary)]/5 p-8 flex flex-col transition-colors relative overflow-hidden"
             >
               <span className="text-xs uppercase tracking-widest text-[var(--color-primary)]/50 mb-2">Direct Comms</span>
               <span className="font-heading font-bold text-2xl group-hover:text-[var(--color-accent)] transition-colors">Email Transmission</span>
+            </a>
+            
+            <a
+              href="https://github.com/Jawad000000/KiranaPulse"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group border border-[var(--color-primary)]/20 hover:border-[var(--color-accent)] bg-[var(--color-primary)]/5 p-8 flex flex-col transition-colors"
+            >
+              <span className="text-xs uppercase tracking-widest text-[var(--color-primary)]/50 mb-2">Source Code</span>
+              <span className="font-heading font-bold text-2xl group-hover:text-[var(--color-accent)] transition-colors">GitHub Repository</span>
             </a>
           </div>
         </div>
