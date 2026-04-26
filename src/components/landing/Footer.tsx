@@ -44,8 +44,20 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="mt-20 text-center font-data text-xs text-[var(--color-primary)]/40">
-          &copy; {new Date().getFullYear()} KiranaPulse. All rights reserved.
+        <div className="mt-20 flex flex-col md:flex-row justify-between items-center gap-4 font-data text-xs text-[var(--color-primary)]/40 pt-8 border-t border-[var(--color-primary)]/5">
+          <div>&copy; {new Date().getFullYear()} KiranaPulse. All rights reserved.</div>
+          <div className="uppercase tracking-widest flex items-center gap-2">
+            Architected by 
+            <a 
+              href="https://github.com/Jawad000000" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors font-bold flex items-center gap-1 group"
+            >
+              Mohd Jawwad
+              <svg className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
