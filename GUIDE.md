@@ -63,3 +63,26 @@ To verify that the application and database triggers are functioning correctly, 
 1. **Login:** Log in as the Distributor.
 2. **Approve Auto-Order:** Check your **Orders** tab. You will see the auto-generated order from the Retailer. Click **Complete Checkout** to fulfill it.
 3. **Success:** The Retailer's stock is now replenished, and the full supply chain lifecycle is complete.
+
+---
+
+## 4. Advanced Operational Features
+
+KiranaPulse includes several advanced tools to aid with daily supply chain operations. These features can be tested throughout the simulation phases:
+
+### Pulse AI Predictive Assistant
+- **Access:** Click the "MessageSquare" toggle in the top navigation bar at any time to open the Pulse AI ChatBoard.
+- **Functionality:** This is a live, context-aware chatbot powered by Gemini 2.5 Flash. It reads your current Zustand state to provide:
+  - **Predictive Recommendations:** Computes sales velocity (units sold per day based on a 14-day window) and advises on stockouts before they happen (e.g., "Order 40 units to cover 21 days of demand").
+  - **Urgency Scoring:** Evaluates inventory items as CRITICAL, HIGH, MEDIUM, or LOW urgency based on days-of-stock remaining.
+  - **Revenue Analytics (Retailers):** Compares past 7 days of revenue against the prior 7 days to give a quick trend analysis.
+- **Testing:** Ask it questions like *"Which items are at risk of stockout?"* or use the one-click dynamic prompts at the bottom of the chat panel.
+
+### Thermal Receipt Generation
+- **Access:** Retailers processing sales in the **POS** tab or Distributors/Manufacturers fulfilling requests in the **Orders** tab.
+- **Functionality:** Upon completing a transaction, a "Print Receipt" modal appears. Clicking the print button isolates the receipt using CSS print media queries and utilizes the browser's native print dialog to format it as a classic 80mm thermal receipt.
+
+### DOCX Logbook Export
+- **Access:** On the **Orders** tab, click "Download Log" for individual fulfilled orders, or click the **Export Logs** button at the top right to open the Bulk Export Drawer.
+- **Functionality:** Generates professional Microsoft Word (`.docx`) documents entirely on the client side.
+  - **Bulk Export:** Allows filtering by "Last N Orders" or selecting a specific date range using the custom calendar widget. Output is formatted as a 7-column inventory tracking logbook.
