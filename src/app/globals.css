@@ -81,3 +81,38 @@
     @apply font-sans font-bold text-xs px-3 py-1 rounded-full inline-block;
   }
 }
+
+/* Print Stylesheet — Receipt Isolation */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  body::before {
+    display: none !important;
+  }
+
+  /* Hide everything except the receipt */
+  body > * {
+    display: none !important;
+  }
+
+  /* Show only the receipt modal container */
+  #receipt-printable {
+    display: block !important;
+    position: static !important;
+    width: 80mm !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Let the receipt's parent containers be visible */
+  #receipt-printable,
+  #receipt-printable * {
+    visibility: visible !important;
+  }
+}

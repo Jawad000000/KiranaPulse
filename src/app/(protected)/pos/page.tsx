@@ -1,17 +1,20 @@
 'use client';
 import { useStore, InventoryItem } from '@/store/useStore';
 import { useState } from 'react';
-import { Search, ArrowLeft, User, CheckCircle2, Minus, Plus } from 'lucide-react';
+import { Search, ArrowLeft, User, CheckCircle2, Minus, Plus, Receipt } from 'lucide-react';
 import Link from 'next/link';
+import ReceiptModal, { ReceiptData } from '@/components/ReceiptModal';
 
 type CartItem = InventoryItem & { cartQuantity: number };
 
 export default function PosPage() {
-  const { inventoryByOwner, activeUserId, addPosTransaction } = useStore();
+  const { inventoryByOwner, activeUserId, addPosTransaction, partners } = useStore();
   const inventory = inventoryByOwner[activeUserId] || [];
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [checkoutComplete, setCheckoutComplete] = useState(false);
+  const [lastSale, setLastSale] = useState<CartItem[] | null>(null);
+  const [receiptData, setReceiptData] = useState<ReceiptData | null>(null);
 
   const filteredItems = inventory.filter(i => 
     i.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -40,13 +43,37 @@ export default function PosPage() {
   const handleCheckout = () => {
     if (cart.length === 0) return;
     
+    // Save cart for receipt before clearing
+    setLastSale([...cart]);
+    
     cart.forEach(item => {
       addPosTransaction(item.id, item.cartQuantity);
     });
     
     setCart([]);
     setCheckoutComplete(true);
-    setTimeout(() => setCheckoutComplete(false), 3000);
+    setTimeout(() => setCheckoutComplete(false), 10000); // Longer timeout for receipt access
+  };
+
+  const handleGenerateReceipt = () => {
+    if (!lastSale) return;
+    const orgName = partners.find(p => p.id === activeUserId)?.name ?? 'Store';
+    
+    const receipt: ReceiptData = {
+      id: 'pos_' + Date.now().toString(36),
+      date: new Date().toLocaleString(),
+      orgName,
+      type: 'POS_SALE',
+      items: lastSale.map(item => ({
+        name: item.name,
+        quantity: item.cartQuantity,
+        unitPrice: item.price,
+        lineTotal: item.price * item.cartQuantity,
+      })),
+      total: lastSale.reduce((acc, item) => acc + (item.price * item.cartQuantity), 0),
+    };
+    
+    setReceiptData(receipt);
   };
 
   return (
@@ -139,9 +166,18 @@ export default function PosPage() {
             </div>
             
             {checkoutComplete ? (
-              <div className="bg-[#10B981] text-white text-center py-4 rounded-full font-sans font-bold shadow-lg shadow-green-500/20 flex items-center justify-center gap-2">
-                <CheckCircle2 className="w-5 h-5" />
-                Completed
+              <div className="flex flex-col gap-3">
+                <div className="bg-[#10B981] text-white text-center py-4 rounded-full font-sans font-bold shadow-lg shadow-green-500/20 flex items-center justify-center gap-2">
+                  <CheckCircle2 className="w-5 h-5" />
+                  Completed
+                </div>
+                <button
+                  onClick={handleGenerateReceipt}
+                  className="bg-[#111] hover:bg-black text-white w-full py-3.5 text-sm rounded-full font-sans font-bold shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                >
+                  <Receipt className="w-4 h-4" />
+                  Generate Receipt
+                </button>
               </div>
             ) : (
               <button 
@@ -156,6 +192,14 @@ export default function PosPage() {
           </div>
         </div>
       </div>
+
+      {/* Receipt Modal */}
+      {receiptData && (
+        <ReceiptModal
+          receipt={receiptData}
+          onClose={() => setReceiptData(null)}
+        />
+      )}
     </div>
   );
 }

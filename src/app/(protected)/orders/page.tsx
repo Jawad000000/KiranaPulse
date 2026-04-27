@@ -1,11 +1,16 @@
 'use client';
 import { useStore, Order } from '@/store/useStore';
 import { useState } from 'react';
-import { CheckCircle, Clock, XCircle, Package } from 'lucide-react';
+import { CheckCircle, Clock, XCircle, Package, Printer, FileDown, BookOpen } from 'lucide-react';
+import ReceiptModal, { ReceiptData } from '@/components/ReceiptModal';
+import LogbookGenerator from '@/components/LogbookGenerator';
+import { generateSingleOrderLog } from '@/lib/generateDocx';
 
 export default function OrdersPage() {
   const { orders, inventoryByOwner, activeUserId, userRole, fulfillOrder, partners } = useStore();
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [receiptData, setReceiptData] = useState<ReceiptData | null>(null);
+  const [logbookOpen, setLogbookOpen] = useState(false);
 
   const inventory = inventoryByOwner[activeUserId] || [];
   
@@ -17,7 +22,11 @@ export default function OrdersPage() {
   const displayOrders = userRole === 'Retailer' ? outgoingOrders : incomingOrders;
   const secondaryOrders = userRole === 'Distributor' ? outgoingOrders : [];
 
+  // All orders relevant to this user (for logbook)
+  const allMyOrders = orders.filter(o => o.requesterId === activeUserId || o.targetId === activeUserId);
+
   const selectedOrder = orders.find(o => o.id === selectedOrderId);
+  const orgName = partners.find(p => p.id === activeUserId)?.name ?? 'Organization';
   
   const handleFulfill = (id: string) => {
     const result = fulfillOrder(id);
@@ -25,6 +34,33 @@ export default function OrdersPage() {
     if (result.ok) {
       setSelectedOrderId(null);
     }
+  };
+
+  const handlePrintReceipt = (order: Order) => {
+    const item = inventory.find(i => i.id === order.itemId);
+    const partnerId = order.requesterId === activeUserId ? order.targetId : order.requesterId;
+    const partnerName = partners.find(p => p.id === partnerId)?.name ?? partnerId;
+
+    const receipt: ReceiptData = {
+      id: order.id,
+      date: new Date(order.timestamp).toLocaleString(),
+      orgName,
+      partnerName,
+      type: 'ORDER_FULFILLMENT',
+      items: [{
+        name: item?.name ?? 'Unknown Item',
+        quantity: order.quantity,
+        unitPrice: item?.price ?? 0,
+        lineTotal: (item?.price ?? 0) * order.quantity,
+      }],
+      total: (item?.price ?? 0) * order.quantity,
+    };
+
+    setReceiptData(receipt);
+  };
+
+  const handleDownloadLog = async (order: Order) => {
+    await generateSingleOrderLog(order, inventory, partners, orgName);
   };
 
   const renderOrderList = (orderList: Order[], title: string, isIncoming: boolean) => (
@@ -72,11 +108,21 @@ export default function OrdersPage() {
 
   return (
     <div className="flex flex-col gap-8 h-full">
-      <div className="border-b border-gray-200 pb-4">
-        <h1 className="text-3xl font-sans font-bold text-dark">
-          {userRole === 'Retailer' ? 'Orders Registry' : 'Orders Received'}
-        </h1>
-        <div className="font-sans text-sm text-gray-500 mt-1">Manage upstream and downstream fulfillment</div>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b border-gray-200 pb-4">
+        <div>
+          <h1 className="text-3xl font-sans font-bold text-dark">
+            {userRole === 'Retailer' ? 'Orders Registry' : 'Orders Received'}
+          </h1>
+          <div className="font-sans text-sm text-gray-500 mt-1">Manage upstream and downstream fulfillment</div>
+        </div>
+        <button
+          onClick={() => setLogbookOpen(true)}
+          className="flex items-center gap-2 bg-[#111] hover:bg-black text-white px-5 py-2.5 rounded-2xl font-sans font-bold text-sm transition-colors shadow-md"
+        >
+          <BookOpen className="w-4 h-4" />
+          Generate Logbook
+        </button>
       </div>
       
       <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -160,8 +206,26 @@ export default function OrdersPage() {
                     Waiting for {partners.find(p => p.id === selectedOrder.targetId)?.name} to fulfill this order...
                   </div>
                 ) : selectedOrder.status === 'fulfilled' ? (
-                  <div className="text-center font-sans text-green-600 font-bold bg-green-50 py-4 rounded-xl border border-green-100">
-                    This order has been successfully fulfilled.
+                  <div className="flex flex-col gap-4">
+                    <div className="text-center font-sans text-green-600 font-bold bg-green-50 py-4 rounded-xl border border-green-100">
+                      This order has been successfully fulfilled.
+                    </div>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => handlePrintReceipt(selectedOrder)}
+                        className="flex-1 bg-[#111] hover:bg-black text-white font-sans font-bold py-3.5 rounded-2xl shadow-md transition-colors flex justify-center items-center gap-2"
+                      >
+                        <Printer className="w-4 h-4" />
+                        Print Receipt
+                      </button>
+                      <button
+                        onClick={() => handleDownloadLog(selectedOrder)}
+                        className="flex-1 bg-white hover:bg-gray-50 text-dark font-sans font-bold py-3.5 rounded-2xl shadow-md transition-colors flex justify-center items-center gap-2 border border-gray-200"
+                      >
+                        <FileDown className="w-4 h-4" />
+                        Download Log
+                      </button>
+                    </div>
                   </div>
                 ) : null}
               </div>
@@ -175,6 +239,24 @@ export default function OrdersPage() {
           )}
         </div>
       </div>
+
+      {/* Receipt Modal */}
+      {receiptData && (
+        <ReceiptModal
+          receipt={receiptData}
+          onClose={() => setReceiptData(null)}
+        />
+      )}
+
+      {/* Logbook Generator Drawer */}
+      <LogbookGenerator
+        isOpen={logbookOpen}
+        onClose={() => setLogbookOpen(false)}
+        orders={allMyOrders}
+        inventory={inventory}
+        partners={partners}
+        orgName={orgName}
+      />
     </div>
   );
 }

@@ -1,10 +1,14 @@
 'use client';
 import Link from 'next/link';
-import { Package, ShoppingCart, Bell, Settings, LayoutDashboard, Users } from 'lucide-react';
+import { Package, ShoppingCart, Bell, Settings, LayoutDashboard, Users, MessageSquare } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useStore, UserRole } from '@/store/useStore';
 
-export default function TopNav() {
+type TopNavProps = {
+  onToggleChat?: () => void;
+};
+
+export default function TopNav({ onToggleChat }: TopNavProps) {
   const pathname = usePathname();
   const { alerts, userRole, setUserRole, activeUserId } = useStore();
   const unreadCount = alerts.filter(a => !a.read && (!a.recipientIds || a.recipientIds.includes(activeUserId))).length;
@@ -56,6 +60,17 @@ export default function TopNav() {
       {/* Right - Actions */}
       <div className="flex items-center gap-3">
         
+        {/* Chat Toggle */}
+        {onToggleChat && (
+          <button
+            onClick={onToggleChat}
+            className="w-10 h-10 flex items-center justify-center bg-[#111] rounded-xl shadow-sm text-[#10B981] hover:bg-black transition-colors relative group"
+            aria-label="Open AI Chat"
+          >
+            <MessageSquare className="w-4 h-4" />
+            <span className="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-[#10B981] rounded-full border-2 border-white animate-pulse" />
+          </button>
+        )}
 
         <Link 
           href="/alerts" 
