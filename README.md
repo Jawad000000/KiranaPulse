@@ -1,8 +1,6 @@
 # KiranaPulse
 
-KiranaPulse is a B2B supply chain simulation platform. It models the flow of inventory from Manufacturers to Distributors to Retailers, tracking real-time stock levels, automated order fulfillment, and multi-tier subscriptions. 
-
-The UI is built around a dark, brutalist "signal" aesthetic, prioritizing raw functionality, high contrast, and fast interactions over unnecessary padding.
+Universal Supply Chain Management Platform — KiranaPulse is a B2B SaaS that enables real-time supply chain operations across any industry sector, connecting Manufacturers, Distributors, and Retailers in a structured 3-tier hierarchy — applicable to FMCG, electronics, pharma, agriculture, and beyond.
 
 ## Tech Stack
 
